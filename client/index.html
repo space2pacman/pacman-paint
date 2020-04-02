@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Paint</title>
+</head>
+<body>
+	
+<style>
+body {
+    margin: 0;
+}
+.canvas {
+    border: 1px solid black;
+}
+</style>
+
+<canvas class="canvas"></canvas>
+
+<script src="js/socket.io.js"></script>
+<script>
+class Paint {
+    constructor(element) {
+        this._canvas = document.querySelector(element);
+        this._ctx = this._canvas.getContext("2d");
+        this._flag = false;
+        this._x = null;
+        this._y = null;
+        this._onDraw = null;
+        this._init();
+    }
+
+    on(event, callback) {
+        window.addEventListener(event, callback);
+    }
+
+    _onMouseDown(event) {
+        this._x = event.offsetX;
+        this._y = event.offsetY;
+        this._flag = true;
+    }
+
+    _onMouseMove(event) {
+        if(this._flag) {
+            this._onDraw.details = { x: event.offsetX, y: event.offsetY};
+            dispatchEvent(this._onDraw);
+        }
+        console.log("kek")
+    }
+
+    _onMouseUp(event) {
+        this._flag = false;
+    }
+
+    draw(x, y) {
+        if(!this._x) this._x = x;
+        if(!this._y) this._y = y;
+
+        this._ctx.beginPath();
+        this._ctx.moveTo(this._x, this._y);
+        this._ctx.lineTo(x, y);
+        this._ctx.strokeStyle = 2;
+        this._ctx.lineWidth = 4;
+        this._ctx.stroke();
+        this._ctx.closePath();
+        this._x = x;
+        this._y = y;
+    }
+
+    _init() {
+        this._canvas.addEventListener("mousedown", this._onMouseDown.bind(this));
+        this._canvas.addEventListener("mousemove", this._onMouseMove.bind(this));
+        this._canvas.addEventListener("mouseup", this._onMouseUp.bind(this));
+        this._onDraw = new CustomEvent("draw")
+    }
+}
+
+    let paint = new Paint(".canvas");
+    let socket = io("http://localhost:7777");
+
+    paint.on("draw", data => {
+        socket.emit("requestDraw", { x: data.details.x, y: data.details.y });
+    })
+
+    socket.on("draw", data => {
+        paint.draw(data.x, data.y)
+    })
+</script>
+</body>
+</html>
