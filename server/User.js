@@ -1,7 +1,12 @@
 class User {
-	constructor() {
+	constructor(id) {
+		this._id = id;
 		this._user = null;
 		this._init();
+	}
+
+	get() {
+		return this._user;
 	}
 
 	_getColor() {
@@ -18,7 +23,7 @@ class User {
 
 	_init() {
 		let user = {
-			id: 0,
+			id: this._id,
 			color: this._getColor(),
 			position: {
 				x: 0,
