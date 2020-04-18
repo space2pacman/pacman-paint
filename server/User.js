@@ -1,12 +1,21 @@
 class User {
 	constructor(id) {
-		this._id = id;
-		this._user = null;
-		this._init();
+		this.id = id;
+		this.position = {
+			draw: { x: 0, y: 0 },
+			cursor: { x: 0, y: 0 }
+		};
+		this.color = this._getColor();
 	}
 
-	get() {
-		return this._user;
+	setDrawPosition(x, y) {
+		this.position.draw.x = x;
+		this.position.draw.y = y;
+	}
+
+	setCursorPosition(x, y) {
+		this.position.cursor.x = x;
+		this.position.cursor.y = y;
 	}
 
 	_getColor() {
@@ -19,19 +28,6 @@ class User {
 
 	_getRandomNumber(max) {
 		return Math.floor(Math.random() * max + 1);
-	}
-
-	_init() {
-		let user = {
-			id: this._id,
-			color: this._getColor(),
-			position: {
-				x: 0,
-				y: 0
-			}
-		}
-
-		this._user = user;
 	}
 }
 

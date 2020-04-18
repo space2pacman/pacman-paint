@@ -14,18 +14,18 @@ cursor.on("move", data => {
 	socket.emit("cursorMove", { x: data.details.x, y: data.details.y })
 })
 
-socket.on("connection", data => {
-	console.log(data);
+socket.on("connection", user => {
+	//
 })
 
-socket.on("drawStarted", data => {
-    paint.draw(data.x, data.y)
+socket.on("drawStarted", user => {
+    paint.draw(user.id, user.position.draw.x, user.position.draw.y);
 })
 
-socket.on("drawEnded", data => {
-    paint.drawEnd();
+socket.on("drawEnded", user => {
+    paint.drawEnd(user.id);
 })
 
-socket.on("cursorMoved", data => {
-	cursor.move(data.x, data.y);
+socket.on("cursorMoved", user => {
+	cursor.move(user.position.cursor.x, user.position.cursor.y);
 })

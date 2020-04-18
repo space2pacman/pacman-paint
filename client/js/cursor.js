@@ -16,16 +16,19 @@ class Cursor {
 		this._image.style.top = y + "px";
     }
 
-	_init() {
+    show() {
 		this._image.addEventListener("load", () => {
 			document.body.appendChild(this._image);
 		})
-		
+    }
+
+	_init() {
 		document.body.addEventListener("mousemove", event => {
 			this._onMove.details = { x: event.offsetX, y: event.offsetY }
 			dispatchEvent(this._onMove);
 		})
 
+		this.show();
 		this._onMove = new CustomEvent("move");
 	}
 }

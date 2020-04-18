@@ -1,9 +1,10 @@
 class Server {
 	constructor() {
 		this._users = [];
+		this._sockets = [];
 	}
 
-	addUser(user) {
+	addUser(user, socket) {
 		this._users.push(user);
 	}
 
@@ -11,24 +12,45 @@ class Server {
 		return this._users;
 	}
 
-	onSocket(socket) {
-		socket.on("requestDrawStart", this._requestDrawStart.bind(this, socket));
-		socket.on("requestDrawEnd", this._requestDrawEnd.bind(this, socket));
-		socket.on("cursorMove", this._cursorMove.bind(this, socket));
+	addSocket(socket) {
+		this._sockets.push(socket);
+		this._addSocketHandler(socket);
 	}
 
-	_requestDrawStart(socket, data) {
-		socket.broadcast.emit("drawStarted", data);
-		socket.emit("drawStarted", data);
+	_addSocketHandler(socket) {
+		let index = this._sockets.indexOf(socket);
+
+		socket.on("requestDrawStart", this._requestDrawStart.bind(this, index));
+		socket.on("requestDrawEnd", this._requestDrawEnd.bind(this, index));
+		socket.on("cursorMove", this._cursorMove.bind(this, index));
 	}
 
-	_requestDrawEnd(socket) {
-		socket.broadcast.emit("drawEnded");
-		socket.emit("drawEnded");
+	_requestDrawStart(index, data) {
+		let socket = this._sockets[index];
+		let users = this.getUsers();
+		let user = users[index];
+
+		user.setDrawPosition(data.x, data.y);
+		socket.broadcast.emit("drawStarted", user);
+		socket.emit("drawStarted", user);
 	}
 
-	_cursorMove(socket, data) {
-		socket.broadcast.emit("cursorMoved", data);
+	_requestDrawEnd(index) {
+		let socket = this._sockets[index];
+		let users = this.getUsers();
+		let user = users[index];
+
+		socket.broadcast.emit("drawEnded", user);
+		socket.emit("drawEnded", user);
+	}
+
+	_cursorMove(index, data) {
+		let socket = this._sockets[index];
+		let users = this.getUsers();
+		let user = users[index];
+
+		user.setCursorPosition(data.x, data.y);
+		socket.broadcast.emit("cursorMoved", user);
 	}
 }
 

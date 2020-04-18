@@ -3,8 +3,8 @@ class Paint {
         this._canvas = document.querySelector(element);
         this._ctx = this._canvas.getContext("2d");
         this._flag = false;
-        this._x = null;
-        this._y = null;
+        this._x = [];
+        this._y = [];
         this._onDrawStart = null;
         this._onDrawEnd = null;
         this._init();
@@ -14,29 +14,27 @@ class Paint {
         window.addEventListener(event, callback);
     }
 
-    draw(x, y) {
-        if(!this._x) this._x = x;
-        if(!this._y) this._y = y;
+    draw(userId, x, y) {
+        if(!this._x[userId]) this._x[userId] = x;
+        if(!this._y[userId]) this._y[userId] = y;
 
         this._ctx.beginPath();
-        this._ctx.moveTo(this._x, this._y);
+        this._ctx.moveTo(this._x[userId], this._y[userId]);
         this._ctx.lineTo(x, y);
         this._ctx.strokeStyle = 2;
         this._ctx.lineWidth = 4;
         this._ctx.stroke();
         this._ctx.closePath();
-        this._x = x;
-        this._y = y;
+        this._x[userId] = x;
+        this._y[userId] = y;
     }
 
-    drawEnd() {
-        this._x = null;
-        this._y = null;
+    drawEnd(userId) {
+        this._x[userId] = null;
+        this._y[userId] = null;
     }
 
     _onMouseDown(event) {
-        this._x = event.offsetX;
-        this._y = event.offsetY;
         this._flag = true;
     }
 
@@ -49,8 +47,6 @@ class Paint {
 
     _onMouseUp(event) {
         this._flag = false;
-        this._x = null;
-        this._y = null;
         dispatchEvent(this._onDrawEnd);
     }
 
