@@ -1,25 +1,39 @@
 class Cursor {
 	constructor(element, image) {
-        this._image = new Image(12, 19);
-        this._image.classList.add("cursor");
-        this._image.src = image;
+        this._image = image;
+        this._cursors = [];
         this._onMove = null;
 		this._init();
+	}
+
+	add(userId, show = true) {
+		let image = new Image(12, 19);
+
+		image.classList.add("cursor");
+		image.src = this._image;
+
+		this._cursors[userId] = { 
+			x: 0, 
+			y: 0,
+			image
+		}
+
+		if(show) {
+			this._cursors[userId].image.addEventListener("load", () => {
+				document.body.appendChild(this._cursors[userId].image);
+			})
+		}
 	}
 
 	on(event, callback) {
         window.addEventListener(event, callback);
     }
 
-	move(x, y) {
-		this._image.style.left = x + "px";
-		this._image.style.top = y + "px";
-    }
-
-    show() {
-		this._image.addEventListener("load", () => {
-			document.body.appendChild(this._image);
-		})
+	move(userId, x, y) {
+		this._cursors[userId].x = x;
+		this._cursors[userId].y = y;
+		this._cursors[userId].image.style.left = this._cursors[userId].x + "px";
+		this._cursors[userId].image.style.top = this._cursors[userId].y + "px";
     }
 
 	_init() {
@@ -28,7 +42,6 @@ class Cursor {
 			dispatchEvent(this._onMove);
 		})
 
-		this.show();
 		this._onMove = new CustomEvent("move");
 	}
 }

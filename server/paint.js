@@ -10,5 +10,6 @@ io.on("connection", socket => {
 
 	server.addSocket(socket);
 	server.addUser(user);
-	socket.broadcast.emit("connect", user);
+	socket.emit("connected", user, server.getUsers());
+	socket.broadcast.emit("joined", user);
 });
