@@ -22,7 +22,11 @@ class Server {
 
 		socket.on("requestDrawStart", this._requestDrawStart.bind(this, index));
 		socket.on("requestDrawEnd", this._requestDrawEnd.bind(this, index));
-		socket.on("cursorMove", this._cursorMove.bind(this, index));
+		socket.on("requestCursorMove", this._requesrCursorMove.bind(this, index));
+		socket.on("requestChangeCursor", this._requestChangeCursor.bind(this, index));
+		socket.on("disconnected", () => {
+			console.log("work")
+		});
 	}
 
 	_requestDrawStart(index, data) {
@@ -44,13 +48,24 @@ class Server {
 		socket.emit("drawEnded", user);
 	}
 
-	_cursorMove(index, data) {
+	_requesrCursorMove(index, data) {
 		let socket = this._sockets[index];
 		let users = this.getUsers();
 		let user = users[index];
 
 		user.setCursorPosition(data.x, data.y);
 		socket.broadcast.emit("cursorMoved", user);
+		socket.emit("cursorMoved", user);
+	}
+
+	_requestChangeCursor(index, data) {
+		let socket = this._sockets[index];
+		let users = this.getUsers();
+		let user = users[index];
+
+		user.setCursorType(data);
+		socket.broadcast.emit("cursorChanged", user);
+		socket.emit("cursorChanged", user);
 	}
 }
 

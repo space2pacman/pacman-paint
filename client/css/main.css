@@ -1,14 +1,56 @@
+@font-face {
+    font-family: 'fontello';
+    src: url('../font/fontello.eot?47267995');
+    src: url('../font/fontello.eot?47267995#iefix') format('embedded-opentype'),
+    url('../font/fontello.woff2?47267995') format('woff2'),
+    url('../font/fontello.woff?47267995') format('woff'),
+    url('../font/fontello.ttf?47267995') format('truetype'),
+    url('../font/fontello.svg?47267995#fontello') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     overflow: hidden;
-}
-
-.canvas {
-    border: 1px solid black;
+    cursor: none;
 }
 
 .cursor {
     position: absolute;
     left: 0;
     top: 0;
+    pointer-events: none;
+}
+
+.cursor:before {
+    font-family: "fontello";
+    font-style: normal;
+    font-weight: normal;
+    speak: none;
+    display: inline-block;
+    text-decoration: inherit;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.cursor[type="arrow"]:before {
+    content: '\f245';
+}
+
+.cursor[type="eraser"]:before {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    border: 1px solid #777;
+    box-sizing: border-box;
 }

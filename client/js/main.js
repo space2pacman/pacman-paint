@@ -1,9 +1,13 @@
 let paint = new Paint(".canvas");
-let cursor = new Cursor(".canvas", "img/cursor.png");
+let cursor = new Cursor();
 let socket = io("http://localhost:7777");
 
 cursor.on("move", data => {
-	socket.emit("cursorMove", { x: data.details.x, y: data.details.y })
+	socket.emit("requestCursorMove", { x: data.details.x, y: data.details.y })
+})
+
+cursor.on("changeCursor", data => {
+	socket.emit("requestChangeCursor", data.details.button);
 })
 
 paint.on("drawStart", data => {
@@ -16,20 +20,16 @@ paint.on("drawEnd", () => {
 
 socket.on("connected", (user, users) => {
 	users.forEach(item => {
-		if(user.id === item.id) {
-			cursor.add(item.id, false);
-		} else {
-			cursor.add(item.id);
-		}
+		cursor.add(item.id, item.color);
 	})
 })
 
 socket.on("joined", user => {
-	cursor.add(user.id);
+	cursor.add(user.id, user.color);
 })
 
 socket.on("drawStarted", user => {
-    paint.draw(user.id, user.position.draw.x, user.position.draw.y);
+    paint.draw(user.id, user.color, user.draw.x, user.draw.y);
 })
 
 socket.on("drawEnded", user => {
@@ -37,5 +37,9 @@ socket.on("drawEnded", user => {
 })
 
 socket.on("cursorMoved", user => {
-	cursor.move(user.id, user.position.cursor.x, user.position.cursor.y);
+	cursor.move(user.id, user.cursor.x, user.cursor.y);
+})
+
+socket.on("cursorChanged", user => {
+	cursor.change(user.id, user.cursor.type);
 })

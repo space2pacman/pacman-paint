@@ -14,11 +14,12 @@ class Paint {
         window.addEventListener(event, callback);
     }
 
-    draw(userId, x, y) {
+    draw(userId, color, x, y) {
         if(!this._x[userId]) this._x[userId] = x;
         if(!this._y[userId]) this._y[userId] = y;
 
         this._ctx.beginPath();
+        this._ctx.strokeStyle = color;
         this._ctx.moveTo(this._x[userId], this._y[userId]);
         this._ctx.lineTo(x, y);
         this._ctx.strokeStyle = 2;
@@ -34,7 +35,7 @@ class Paint {
         this._y[userId] = null;
     }
 
-    _onMouseDown(event) {
+    _onMouseDown() {
         this._flag = true;
     }
 
@@ -59,6 +60,7 @@ class Paint {
         this._canvas.addEventListener("mousedown", this._onMouseDown.bind(this));
         this._canvas.addEventListener("mousemove", this._onMouseMove.bind(this));
         this._canvas.addEventListener("mouseup", this._onMouseUp.bind(this));
+        this._canvas.addEventListener("contextmenu", e => e.preventDefault());
         this._onDrawStart = new CustomEvent("drawStart");
         this._onDrawEnd = new CustomEvent("drawEnd");
         this._setSize();

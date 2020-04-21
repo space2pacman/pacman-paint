@@ -1,21 +1,39 @@
 class User {
 	constructor(id) {
 		this.id = id;
-		this.position = {
-			draw: { x: 0, y: 0 },
-			cursor: { x: 0, y: 0 }
+		this.draw = {
+			x: 0, 
+			y: 0
 		};
-		this.color = this._getColor();
+		this.cursor = {
+			x: 0,
+			y: 0,
+			type: "arrow"
+		}
+		this._defaultColor = this._getColor();
+		this.color = this._defaultColor;
 	}
 
 	setDrawPosition(x, y) {
-		this.position.draw.x = x;
-		this.position.draw.y = y;
+		this.draw.x = x;
+		this.draw.y = y;
 	}
 
 	setCursorPosition(x, y) {
-		this.position.cursor.x = x;
-		this.position.cursor.y = y;
+		this.cursor.x = x;
+		this.cursor.y = y;
+	}
+
+	setCursorType(type) {
+		this.cursor.type = type;
+
+		if(type === "eraser") {
+			this.color = "rgb(255, 255, 255)";
+		}
+
+		if(type === "arrow") {
+			this.color = this._defaultColor;
+		}
 	}
 
 	_getColor() {
