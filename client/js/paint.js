@@ -14,7 +14,7 @@ class Paint {
         window.addEventListener(event, callback);
     }
 
-    draw(userId, color, x, y) {
+    draw(userId, lineWidth, color, x, y) {
         if(!this._x[userId]) this._x[userId] = x;
         if(!this._y[userId]) this._y[userId] = y;
 
@@ -22,8 +22,7 @@ class Paint {
         this._ctx.strokeStyle = color;
         this._ctx.moveTo(this._x[userId], this._y[userId]);
         this._ctx.lineTo(x, y);
-        this._ctx.strokeStyle = 2;
-        this._ctx.lineWidth = 4;
+        this._ctx.lineWidth = lineWidth;
         this._ctx.stroke();
         this._ctx.closePath();
         this._x[userId] = x;

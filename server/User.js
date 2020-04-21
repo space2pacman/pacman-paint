@@ -12,6 +12,7 @@ class User {
 		}
 		this._defaultColor = this._getColor();
 		this.color = this._defaultColor;
+		this.lineWidth = 4;
 	}
 
 	setDrawPosition(x, y) {
@@ -29,10 +30,12 @@ class User {
 
 		if(type === "eraser") {
 			this.color = "rgb(255, 255, 255)";
+			this.lineWidth = 20;
 		}
 
 		if(type === "arrow") {
 			this.color = this._defaultColor;
+			this.lineWidth = 4;
 		}
 	}
 

@@ -29,7 +29,7 @@ socket.on("joined", user => {
 })
 
 socket.on("drawStarted", user => {
-    paint.draw(user.id, user.color, user.draw.x, user.draw.y);
+    paint.draw(user.id, user.lineWidth, user.color, user.draw.x, user.draw.y);
 })
 
 socket.on("drawEnded", user => {
